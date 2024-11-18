@@ -22,8 +22,8 @@ import torch.optim as optim
 from torchvision.models import vgg16_bn
 
 import meta_config as config
-from model_v5 import *
-#from model_edge_enhance import *
+#from model_v5 import *
+from model_edge_enhance import *
 from our_utils import *
 from dataset_loader import *
 from loss import *
@@ -91,8 +91,12 @@ for exp in range(NUM_EXP):
     for fn in test:
         ct_left.remove(fn)
     print(f"ct_left len: {len(ct_left)}")
-    train_sp, train_mri, test_sp, test_mri = load_data_MRSPECT(ct, target_dir, test) #load_data_MRSPECT
-    
+    if "SPECT" in opt.dataset:
+        train_sp, train_mri, test_sp, test_mri = load_data_MRSPECT(ct, target_dir, test) #load_data_MRSPECT
+    else:
+        train_sp, train_mri, test_sp, test_mri = load_data2(ct, target_dir, test)
+
+    # change this
     fold_path = f"./res/MRISPECT/exp_{exp}_new_abl"
     os.makedirs(fold_path, exist_ok=True)
     model_dir = f"./res/MRISPECT/exp_{exp}_new_abl/pretrained_models"
